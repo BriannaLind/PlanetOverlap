@@ -28,12 +28,12 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           poetry --version
 
-      # 4️⃣ Install dependencies
+      # 4️⃣ Install dependencies (including package)
       - name: Install dependencies
         run: |
           poetry install
 
-      # 5️⃣ Run linting (all files, path-independent)
+      # 5️⃣ Run linting
       - name: Run linting
         run: |
           poetry run flake8 . --max-line-length=100
@@ -43,7 +43,7 @@ jobs:
         run: |
           poetry run pytest tests --maxfail=1 --disable-warnings -q
 
-      # 7️⃣ Optional: Memory profiling on key tests
-      - name: Check memory usage
+      # 7️⃣ Check memory usage for key test
+      - name: Memory profiling
         run: |
           poetry run python -m memory_profiler tests/test_analysis.py
