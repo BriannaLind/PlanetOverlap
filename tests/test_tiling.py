@@ -1,11 +1,12 @@
-import pytest
 from planet_overlap.utils import estimate_scene_count, should_tile
+
 
 def test_scene_estimation():
     area_km2 = 5000
     scenes_per_km2 = 0.5
     count = estimate_scene_count(area_km2, scenes_per_km2)
     assert count == 2500
+
 
 def test_temporal_tiling_trigger():
     # Should tile if scenes exceed threshold

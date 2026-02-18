@@ -5,7 +5,7 @@ Supports single/multiple AOIs, points, and polygons.
 """
 
 from pathlib import Path
-from shapely.geometry import Point, Polygon, mapping
+from shapely.geometry import Point, Polygon
 from shapely.ops import unary_union
 import geopandas as gpd
 from typing import List, Union
@@ -54,7 +54,9 @@ def buffer_points(points: List[Point], buffer_deg: float = 0.01) -> List[Polygon
         List[Polygon]: Buffered polygons
     """
     buffered = [pt.buffer(buffer_deg) for pt in points]
-    logger.info(f"Buffered {len(points)} points into polygons with {buffer_deg}° radius")
+    logger.info(
+        f"Buffered {len(points)} points into polygons with {buffer_deg}° radius"
+    )
     return buffered
 
 

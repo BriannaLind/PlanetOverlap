@@ -14,15 +14,15 @@ Supports multiple AOIs and multiple date ranges.
 
 import os
 import logging
-from typing import List, Optional
+from typing import List
 
 from planet_overlap import filters, pagination, analysis, geometry
 
 # Configure logging for progress tracking
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
+
 
 def run_client(
     aoi_files: List[str],
@@ -32,7 +32,7 @@ def run_client(
     cloud_max: float = 0.5,
     min_sun_angle: float = 0.0,
     spatial_tile_threshold_km2: float = 10000,
-    temporal_tile_threshold_days: int = 30
+    temporal_tile_threshold_days: int = 30,
 ) -> None:
     """
     Main function to execute Planet Overlap workflow.
@@ -99,22 +99,28 @@ def run_client(
 
         if area_km2 > spatial_tile_threshold_km2:
             spatial_tiles = geometry.spatial_tile(aoi)
-            logging.info(f"AOI exceeds {spatial_tile_threshold_km2} km², applying spatial tiling: {len(spatial_tiles)} tiles")
+            logging.info(
+                f"AOI exceeds {spatial_tile_threshold_km2} km², applying spatial tiling: {len(spatial_tiles)} tiles"
+            )
 
         if date_range_days > temporal_tile_threshold_days:
             temporal_tiles = filters.temporal_tile(start, end)
-            logging.info(f"Date range exceeds {temporal_tile_threshold_days} days, applying temporal tiling: {len(temporal_tiles)} intervals")
+            logging.info(
+                f"Date range exceeds {temporal_tile_threshold_days} days, applying temporal tiling: {len(temporal_tiles)} intervals"
+            )
 
         # Fetch imagery and analyze for each tile
         for s_tile in spatial_tiles:
             for t_start, t_end in temporal_tiles:
-                logging.info(f"Fetching imagery for tile and date range: {t_start} to {t_end}")
+                logging.info(
+                    f"Fetching imagery for tile and date range: {t_start} to {t_end}"
+                )
                 try:
                     items = pagination.fetch_items(
                         geometry=s_tile,
                         start_date=t_start,
                         end_date=t_end,
-                        cloud_max=cloud_max
+                        cloud_max=cloud_max,
                     )
                     analysis_results = analysis.compute_overlap(items, min_sun_angle)
                     analysis.save_results(analysis_results, output_dir)

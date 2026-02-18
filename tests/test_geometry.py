@@ -1,6 +1,6 @@
-import pytest
 from shapely.geometry import Point, Polygon
-from planet_overlap.geometry import load_aoi, buffer_points
+from planet_overlap.geometry import buffer_points
+
 
 def test_point_buffering():
     # Single point AOI
@@ -10,6 +10,7 @@ def test_point_buffering():
     assert isinstance(buffered[0], Polygon)
     # Check buffer distance roughly matches
     assert buffered[0].area > 0
+
 
 def test_multiple_points():
     points = [Point(-121.5, 37.0), Point(-122.0, 38.0)]

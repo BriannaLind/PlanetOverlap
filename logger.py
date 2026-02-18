@@ -1,6 +1,7 @@
 import logging
 import sys
 
+
 def setup_logger(log_file: str | None = None):
     """
     Configure logging for console and optional file output.
@@ -13,5 +14,5 @@ def setup_logger(log_file: str | None = None):
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=handlers
+        handlers=handlers,
     )
