@@ -11,12 +11,12 @@ documentation = "https://github.com/BriannaLind/PlanetOverlap"
 keywords = ["planet", "imagery", "satellite", "geospatial", "analysis"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10, ^3.11"
 requests = "^2.31"
-geopandas = "^1.4"
+geopandas = "1.1.2"
 shapely = "^2.0"
 numpy = "^1.24"
-pandas = "^2.1"
+pandas = "^2.0"
 tqdm = "^4.66"
 
 [tool.poetry.group.dev.dependencies]
