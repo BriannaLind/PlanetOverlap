@@ -14,7 +14,7 @@ Supports multiple AOIs and multiple date ranges.
 
 # client.py
 import logging
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 from planet_overlap.filters import build_filters
 from planet_overlap.geometry import load_aoi
 
@@ -22,31 +22,32 @@ logging.basicConfig(level=logging.INFO)
 
 
 def prepare_filters(
-    geojson_paths: List[str],
-    date_ranges: List[Tuple[str, str]]
+    geojson_paths: List[str], date_ranges: List[Tuple[str, str]]
 ) -> dict:
     """
     Build filters for multiple AOIs and date ranges.
-    
+
     Args:
         geojson_paths: List of file paths to AOI geojsons.
         date_ranges: List of (start_date, end_date) tuples.
-    
+
     Returns:
         Dictionary containing combined filters.
     """
     filters = build_filters(geojson_paths, date_ranges)
-    logging.info("Filters prepared for %d AOIs/date ranges", len(filters.get("config", [])))
+    logging.info(
+        "Filters prepared for %d AOIs/date ranges", len(filters.get("config", []))
+    )
     return filters
 
 
 def load_aois(geojson_paths: List[str]):
     """
     Load AOIs from GeoJSON files.
-    
+
     Args:
         geojson_paths: List of AOI geojson paths.
-    
+
     Returns:
         List of AOI geometries.
     """
@@ -55,17 +56,14 @@ def load_aois(geojson_paths: List[str]):
     return aois
 
 
-def run_client(
-    geojson_paths: List[str],
-    date_ranges: List[Tuple[str, str]]
-):
+def run_client(geojson_paths: List[str], date_ranges: List[Tuple[str, str]]):
     """
     Full client workflow: load AOIs, prepare filters, and return filters + AOIs.
-    
+
     Args:
         geojson_paths: List of AOI GeoJSON paths.
         date_ranges: List of (start_date, end_date) tuples.
-    
+
     Returns:
         Tuple of (filters dict, list of AOI geometries)
     """

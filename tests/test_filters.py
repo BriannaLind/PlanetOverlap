@@ -14,14 +14,8 @@ def test_single_geojson_and_single_date():
 
 def test_multiple_geojson_and_multiple_date_ranges():
     """Test multiple AOIs with multiple date ranges."""
-    geojson_paths = [
-        "tests/data/sample_aoi.geojson",
-        "tests/data/sample_aoi2.geojson"
-    ]
-    date_ranges = [
-        ("2023-01-01", "2023-01-15"),
-        ("2023-02-01", "2023-02-10")
-    ]
+    geojson_paths = ["tests/data/sample_aoi.geojson", "tests/data/sample_aoi2.geojson"]
+    date_ranges = [("2023-01-01", "2023-01-15"), ("2023-02-01", "2023-02-10")]
     filters = build_filters(geojson_paths, date_ranges)
     # Ensure each AOI/date pair generates a config entry
     assert len(filters["config"]) == 2
@@ -32,13 +26,10 @@ def test_multiple_geojson_and_multiple_date_ranges():
 
 def test_mixed_single_and_range_dates():
     """Test handling of a mix of single dates and date ranges."""
-    geojson_paths = [
-        "tests/data/sample_aoi.geojson",
-        "tests/data/sample_aoi2.geojson"
-    ]
+    geojson_paths = ["tests/data/sample_aoi.geojson", "tests/data/sample_aoi2.geojson"]
     date_ranges = [
         ("2023-01-01", "2023-01-01"),  # single date as range
-        ("2023-02-01", "2023-02-10")
+        ("2023-02-01", "2023-02-10"),
     ]
     filters = build_filters(geojson_paths, date_ranges)
     assert len(filters["config"]) == 2
