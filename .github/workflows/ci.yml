@@ -15,8 +15,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup Python
-      - name: Set up Python 3.10
+      # 2️⃣ Setup Python 3.10
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
@@ -33,7 +33,7 @@ jobs:
         run: |
           poetry install --no-root
 
-      # 5️⃣ Run linting (safe, path-independent)
+      # 5️⃣ Run linting (all files, path-independent)
       - name: Run linting
         run: |
           poetry run flake8 . --max-line-length=100
@@ -41,5 +41,9 @@ jobs:
       # 6️⃣ Run tests
       - name: Run tests
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
           poetry run pytest tests --maxfail=1 --disable-warnings -q
+
+      # 7️⃣ Optional: Memory profiling on key tests
+      - name: Check memory usage
+        run: |
+          poetry run python -m memory_profiler tests/test_analysis.py
