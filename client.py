@@ -100,7 +100,7 @@ def run_client(
         if area_km2 > spatial_tile_threshold_km2:
             spatial_tiles = geometry.spatial_tile(aoi)
             logging.info(
-                "AOI exceeds %d km², applying spatial tiling: %d tiles"
+                "AOI exceeds %d km², applying spatial tiling: %d tiles",
                 spatial_tile_threshold_km2,
                 len(spatial_tiles),
             )
@@ -108,7 +108,7 @@ def run_client(
         if date_range_days > temporal_tile_threshold_days:
             temporal_tiles = filters.temporal_tile(start, end)
             logging.info(
-                "Date range exceeds %d days, applying temporal tiling: %d intervals"
+                "Date range exceeds %d days, applying temporal tiling: %d intervals",
             temporal_tile_threshold_days,
             len(temporal_tiles)
             )
