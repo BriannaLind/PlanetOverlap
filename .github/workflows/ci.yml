@@ -1,35 +1,26 @@
-ame: planet_overlap CI
+name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+    - name: Install Poetry
+      run: curl -sSL https://install.python-poetry.org | python3 -
 
-      - name: Install package
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-          pip install pytest memory-profiler
+    - name: Install dependencies
+      run: poetry install
 
-      - name: Run tests
-        run: |
-          pytest planet_overlap/tests
-
-      - name: Run lint check
-        run: |
-          pip install flake8
-          flake8 planet_overlap --max-line-length=100
+    - name: Run tests
+      run: poetry run pytest --cov=planet_overlap --cov-report=xml
