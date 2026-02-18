@@ -1,30 +1,31 @@
 [tool.poetry]
 name = "planet_overlap"
-version = "0.2.0"
-description = "Automated PlanetScope imagery processing with tiling, pagination, and analysis"
-authors = ["Brianna Lind <your-email@example.com>"]
+version = "1.0.0"
+description = "A Python package for querying, filtering, tiling, and analyzing Planet imagery datasets."
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 license = "MIT"
 homepage = "https://github.com/BriannaLind/PlanetOverlap"
 repository = "https://github.com/BriannaLind/PlanetOverlap"
-documentation = "https://github.com/BriannaLind/PlanetOverlap"
-keywords = ["planet", "imagery", "satellite", "geospatial", "analysis"]
+keywords = ["planet", "satellite", "geospatial", "imagery"]
 
+# Compatible Python version
 [tool.poetry.dependencies]
-python = "^3.10, <4.0"
-requests = "^2.31"
+python = "^3.10"
+requests = "^2.31.0"
+numpy = "^1.26.0"
+pandas = "^2.1.1"
 geopandas = "1.1.2"
-shapely = "^2.0"
-numpy = "^1.24"
-pandas = "^2.0"
-tqdm = "^4.66"
+shapely = "^2.1.1"
+fiona = "^1.9.4"
+pyproj = "^3.6.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.3"
-flake8 = "^6.1"
-black = "^24.0"
-memory-profiler = "^1.0"
+pytest = "^7.4.2"
+flake8 = "^7.1.0"
+black = "^24.3.0"
+memory-profiler = "0.61.0"
 
 [build-system]
-requires = ["poetry-core>=1.5.1"]
+requires = ["poetry-core>=1.6.0"]
 build-backend = "poetry.core.masonry.api"
