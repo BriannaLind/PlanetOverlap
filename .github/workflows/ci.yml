@@ -11,43 +11,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python
-      - name: Set up Python
+      - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      # Step 3: Install Poetry
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           export PATH="$HOME/.local/bin:$PATH"
           poetry --version
 
-      # Step 4: Install dependencies
       - name: Install dependencies
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           poetry install --no-root
 
-      # Step 5: Run unit tests
-      - name: Run tests
-        run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          poetry run pytest planet_overlap/tests --maxfail=1 --disable-warnings -q
-
-      # Step 6: Lint check
-      - name: Lint code
+      - name: Run linting
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           poetry run flake8 planet_overlap --max-line-length=100
 
-      # Step 7: Optional: Memory profiler test (if included in dev dependencies)
-      - name: Memory profiling (optional)
+      - name: Run tests
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-          poetry run python -m memory_profiler
+          poetry run pytest planet_overlap/tests
+
+      - name: Check memory usage
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          poetry run python -m memory_profiler planet_overlap/tests/test_analysis.py
