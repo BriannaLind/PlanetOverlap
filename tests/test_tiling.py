@@ -1,10 +1,10 @@
-from planet_overlap.utils import estimate_scene_count, should_tile
+from planet_overlap.utils import estimate_scenes_by_area, should_tile
 
 
 def test_scene_estimation():
     area_km2 = 5000
     scenes_per_km2 = 0.5
-    count = estimate_scene_count(area_km2, scenes_per_km2)
+    count = estimate_scenes_by_area(area_km2, scenes_per_km2)
     assert count == 2500
 
 

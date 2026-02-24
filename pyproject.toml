@@ -41,6 +41,9 @@ dev = [
 Homepage = "https://github.com/BriannaLind/planet_overlap"
 Repository = "https://github.com/BriannaLind/planet_overlap"
 
+[project.scripts]
+planet_overlap = "planet_overlap.cli:main"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 

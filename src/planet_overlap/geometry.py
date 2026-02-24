@@ -15,6 +15,22 @@ logger = logging.getLogger(__name__)
 )
 
 
+def normalize_geometry(geom: Union[Point, Polygon], buffer_deg: float = 0.01) -> Polygon:
+    """
+    Normalize geometry to polygon, buffering points if needed.
+
+    Args:
+        geom: Point or Polygon geometry
+        buffer_deg: Buffer size in degrees for points
+
+    Returns:
+        Polygon geometry
+    """
+    if isinstance(geom, Point):
+        return geom.buffer(buffer_deg)
+    return geom
+
+
 def load_aoi(paths: List[Union[str, Path]]) -> List[Polygon]:
     (
         " Load AOIs from multiple GeoJSON files or single"

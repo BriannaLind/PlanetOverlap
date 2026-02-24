@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-109.05, 37.00],
+          [-102.05, 37.00],
+          [-102.05, 41.00],
+          [-109.05, 41.00],
+          [-109.05, 37.00]
+        ]]
+      },
+      "properties": {
+        "name": "Colorado"
+      }
+    }
+  ]
+}

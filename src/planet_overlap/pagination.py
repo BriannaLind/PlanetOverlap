@@ -14,6 +14,11 @@ def estimate_scene_count(days: int, avg_scenes_per_day: float = 1.0) -> int:
     return int(days * avg_scenes_per_day)
 
 
+def _count_days_between(start: datetime, end: datetime) -> int:
+    """Calculate the number of days between two dates inclusive."""
+    return (end - start).days + 1
+
+
 def tile_dates(
     start: datetime, end: datetime, is_point: bool = False
 ) -> List[Tuple[datetime, datetime]]:

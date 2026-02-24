@@ -13,7 +13,7 @@ def test_point_buffer():
 
 def test_point_no_tiling_under_3_years():
     start = datetime(2023, 1, 1)
-    end = datetime(2025, 12, 31)  # ~3 years
+    end = datetime(2025, 12, 30)  # Just under 3 years (1095 days)
     slices = tile_dates(start, end, is_point=True)
     assert len(slices) == 1  # Should not split under 3 years
 

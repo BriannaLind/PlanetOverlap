@@ -15,6 +15,16 @@ def estimate_scene_count(
     return max(estimated, 0)
 
 
+def estimate_scenes_by_area(area_km2: float, scenes_per_km2: float) -> int:
+    """Estimate number of scenes based on area and scene density."""
+    return int(area_km2 * scenes_per_km2)
+
+
+def should_tile(scene_count: int, threshold: int = 2000) -> bool:
+    """Determine if tiling is needed based on scene count threshold."""
+    return scene_count > threshold
+
+
 def generate_monthly_ranges(start_date: str, end_date: str):
     (" Split date range into monthly windows.")
 

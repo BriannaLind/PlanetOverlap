@@ -1,10 +1,11 @@
 # PlanetOverlap
 Find and organize satellite images for area/time of interest (tailored for Planet Labs Imagery)
 
-**planet_overlap** is a scalable satellite imagery query engine for retrieving and filtering PlanetScope imagery over large areas and long time periods.
+**planet_overlap** is a scalable satellite imagery query engine for retrieving and filtering Planet Labs imagery (PSScene and SkySatScene) over large areas and long time periods.
 
 It supports:
 
+- 🛰 **Imagery Types**: PSScene (PlanetScope) and SkySatScene
 - 📍 Multiple Areas of Interest (AOIs)
 - 📌 Automatic buffering of point inputs
 - 🗺 Automatic spatial tiling (in degrees)
@@ -29,12 +30,13 @@ You provide:
 
 The system:
 
-1. Connects to the Planet API
-2. Filters imagery by date and quality
-3. Automatically tiles large areas (if needed)
-4. Tracks progress during execution
-5. Logs runtime (seconds) and peak memory usage (MB)
-6. Saves structured output
+1. Connects to the Planet API with your API key
+2. Searches for **PSScene** and **SkySatScene** imagery
+3. Filters imagery by date and quality
+4. Automatically tiles large areas (if needed)
+5. Tracks progress during execution
+6. Logs runtime (seconds) and peak memory usage (MB)
+7. Saves structured results (GeoJSON and JSON files)
 
 
 ---
@@ -54,17 +56,39 @@ pip install .
 ```
 ---
 ## 🔑 Planet API Key
-Set your API key as an environment variable:
-#### macOS/Linux
 
+This tool requires a valid Planet API key to search and retrieve imagery. You can obtain an API key from the [Planet Developer Portal](https://www.planet.com/developer/).
+
+Set your API key as an environment variable:
+
+#### macOS/Linux
 
 ```bash
 export PLANET_API_KEY=your_api_key_here
 ```
 
-#### Windows (PowerShell)
+To make this permanent, add it to your `~/.bashrc` or `~/.zshrc`:
+
 ```bash
+echo 'export PLANET_API_KEY=your_api_key_here' >> ~/.bashrc
+source ~/.bashrc
+```
+
+#### Windows (PowerShell)
+
+```powershell
 setx PLANET_API_KEY "your_api_key_here"
+```
+
+Restart your terminal or PowerShell session to apply the changes.
+
+#### Verify API Key
+
+To verify your API key is set correctly:
+
+```bash
+echo $PLANET_API_KEY  # macOS/Linux
+echo $env:PLANET_API_KEY  # PowerShell
 ```
 ---
 ## 🛰 Basic Usage
@@ -75,6 +99,31 @@ planet_overlap \
   --aoi-file aoi.geojson \
   --start-date 2023-01-01 \
   --end-date 2023-01-31 \
+  --output-dir ./output
+```
+
+### CLI Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--aoi-file` | Path to GeoJSON file containing Area of Interest | **required** |
+| `--start-date` | Start date in YYYY-MM-DD format | **required** |
+| `--end-date` | End date in YYYY-MM-DD format | **required** |
+| `--output-dir` | Output directory for results | **required** |
+| `--max-cloud` | Maximum cloud cover fraction (0.0-1.0) | `0.5` |
+| `--min-sun-angle` | Minimum sun angle in degrees (0.0-90.0) | `0.0` |
+| `--tile-size` | Spatial tile size in decimal degrees | `1.0` |
+| `--point-buffer` | Buffer size for point inputs in degrees | `0.001` |
+
+### Example with Filters
+
+```bash
+planet_overlap \
+  --aoi-file colorado.geojson \
+  --start-date 2023-01-01 \
+  --end-date 2023-01-31 \
+  --max-cloud 0.3 \
+  --min-sun-angle 30 \
   --output-dir ./output
 ```
 
@@ -117,6 +166,20 @@ Sun angle is measured in degrees (°) above the horizon. Lower values may produc
 ```bash
 --min-sun-angle 10
 ```
+
+---
+## 🛰 Imagery Types
+
+The tool searches for the following Planet imagery types:
+
+| Type | Description | Resolution |
+|------|-------------|------------|
+| **PSScene** | PlanetScope imagery (3-band and 4-band) | ~3.7m per pixel |
+| **SkySatScene** | High-resolution satellite imagery | ~0.5m per pixel |
+
+Both imagery types are searched simultaneously and results are combined in the output.
+
+---
 ## 🗺 Spatial Tiling
 Large AOIs are automatically divided into grid tiles. This can also occur for long date ranges and memory-sensitive runs. Tile size is specified in decimal degrees (°):
 
@@ -151,6 +214,29 @@ Buffer size is specified in decimal degrees (°):
 0.001° ≈ 111 meters (latitude direction)
 
 ---
+## 📂 Output Files
+
+The CLI generates the following files in your output directory:
+
+| File | Description |
+|------|-------------|
+| `results.geojson` | GeoJSON file with filtered satellite imagery (contains geometry, timestamps, cloud cover, sun angle, etc.) |
+| `properties.json` | JSON file with all scene properties for further analysis |
+
+Each scene in `results.geojson` includes:
+- `name`: Scene ID
+- `geometry`: Scene footprint as a polygon
+- `view_angle`: View angle of the scene
+- `acquired`: Acquisition timestamp
+- `cloud_cover`: Cloud cover fraction (0.0-1.0)
+- `sun_elevation`: Sun elevation angle
+- `sun_angle`: Sun angle above horizon (90° - sun_elevation)
+- `satellite_id`: Satellite identifier
+- `central_lon`/`central_lat`: Scene center coordinates
+- `local_times`: Local acquisition time
+- `max_sun_diff`: Maximum sun angle difference with overlapping scenes
+
+---
 ## 📊 Performance Tracking
 Each run reports:
 
@@ -176,12 +262,19 @@ Tests verify:
 * Tiling behavior
 * Point buffering
 * Filter construction
+* CLI argument parsing
+* Planet API integration
 
-Run all unit tests:
-
+Run all tests with pytest:
 
 ```bash
-python -m unittest discover planet_overlap/tests
+pytest tests/
+```
+
+Run tests with verbose output:
+
+```bash
+pytest tests/ -v
 ```
 
 ---
@@ -204,36 +297,50 @@ Workflow file:
 README.md                 # Project documentation
 pyproject.toml            # Project configuration
 .gitignore                # Files Git should ignore
-planet_overlap/
-├── cli.py
-├── geometry.py
-├── filters.py
-├── pagination.py
-├── quality.py
-├── analysis.py
-├── performance.py
-├── logger.py
-├── client.py
-├── io.py
-└── tests/
+src/
+└── planet_overlap/
+    ├── __init__.py
+    ├── cli.py            # CLI interface and argument parsing
+    ├── geometry.py       # AOI loading, point detection, buffering
+    ├── filters.py        # Planet API filter construction
+    ├── pagination.py    # Spatial and temporal tiling
+    ├── quality.py        # Quality filtering functions
+    ├── analysis.py      # Analysis and processing pipeline
+    ├── performance.py    # Runtime and memory profiling
+    ├── logger.py        # Logging configuration
+    ├── client.py        # Planet API client and session management
+    ├── io.py            # File I/O operations
+    └── utils.py         # Utility functions
+tests/
     ├── __init__.py
     ├── test_geometry.py        # Test loading AOIs, point detection, buffering, polygons
     ├── test_filters.py         # Test single/multiple .geojson AOIs, date ranges, cloud/sun filters
-    ├── test_client.py          # Test Planet API session creation, authentication, pagination
-    ├── test_io.py              # Test reading/writing lists and CSV/GeoDataFrames
-    ├── test_quality.py         # Test filtering by view_angle, sun_angle, cloud cover
-    ├── test_overlap.py         # Test polygon intersection, area and sun angle calculations
     ├── test_analysis.py        # Test overall analysis pipeline logic, derived columns
     ├── test_cli.py             # Test CLI argument parsing, dynamic config, and default overrides
-    ├── test_utils.py           # Test scene estimation, temporal tiling, and helper functions
-    └── test_tiling.py          # Test automatic spatial and temporal tiling logic
+    ├── test_geometry.py        # Test geometry operations
+    ├── test_points.py          # Test point handling and date tiling
+    └── test_tiling.py         # Test automatic spatial and temporal tiling logic
 ```
 
 ---
 ## ⚙ Requirements
-* Python ≥ 3.9
+* Python ≥ 3.10
 * requests
 * geopandas
 * shapely
 * tqdm
+
+### Installing Dependencies
+
+After cloning the repository, install the package with its dependencies:
+
+```bash
+pip install .
+```
+
+Or install dependencies manually:
+
+```bash
+pip install geopandas shapely requests tqdm
+```
 
