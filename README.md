@@ -1,4 +1,4 @@
-# PlanetOverlap
+# planet_overlap
 Find and organize satellite images for area/time of interest (tailored for Planet Labs Imagery)
 
 **planet_overlap** is a scalable satellite imagery query engine for retrieving and filtering Planet Labs imagery (PSScene and SkySatScene) over large areas and long time periods.
@@ -54,6 +54,22 @@ Install locally:
 ```bash
 pip install .
 ```
+### Special consideration for Windows Users:
+
+There may be a need for pre-compiled wheel files to be installed for several packages (GDAL, Fiona, Shapely, pyproj, and Rtree). Downloading GDAL first will avoid dependency errors. You will need to taylor these downloads for your specific python version and architecture (ie., Python 3.14 64-bit)
+```Powershell
+python -m pip install --index https://gisidx.github.io/gwi gdal fiona shapely pyproj rtree
+```
+Verify your installation:
+```Powershell
+python -c "import geopandas; import fiona; import shapely; import pyproj; import rtree; print('All dependencies installed!')"
+```
+Install GeoPandas after the wheels:
+```Powershell
+python -m pip install geopandas
+```
+**Rationale** This package uses GDAL and Fiona which arenon-python C/ C++ code libraries. Pip cannot automatically build GDALon Windows so it needs precompiled binary packages (wheels). 
+
 ---
 ## 🔑 Planet API Key
 
