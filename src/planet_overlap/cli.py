@@ -220,7 +220,7 @@ def main():
         [all_properties],
         [all_geometries],
         [all_ids],
-        min_view_angle=3,
+        min_view_angle=0,
         min_sun_angle=args.min_sun_angle
     )
     
