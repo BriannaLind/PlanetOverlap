@@ -10,7 +10,7 @@ def filter_quality(
     geometries: List[Dict[str, Any]],
     ids: List[str],
     min_points: int = 5,
-    min_view_angle: float = 3,
+    min_view_angle: float = 0,
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[str]]:
     """Filter out scenes with insufficient points or bad quality."""
   index_sub = [
@@ -114,7 +114,7 @@ def process_tiles(
     all_properties: List[List[Dict[str, Any]]],
     all_geometries: List[List[Dict[str, Any]]],
     all_ids: List[List[str]],
-    min_view_angle: float = 3,
+    min_view_angle: float = 0,
     min_sun_angle: float = 0,
 ) -> gpd.GeoDataFrame:
     (" Process multiple tiles/datasets and return a unified GeoDataFrame.")
