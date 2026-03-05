@@ -13,14 +13,12 @@ def filter_quality(
     min_view_angle: float = 3,
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[str]]:
     """Filter out scenes with insufficient points or bad quality."""
-    index_sub = [
-        i
-        for i, prop in enumerate(properties)
-        if prop.get("ground_control", False)
-        and prop.get("quality_category", "") == "standard"
-        and prop.get("view_angle", 0) < min_view_angle
-        and len(geometries[i]["coordinates"][0]) >= min_points
-    ]
+  index_sub = [
+    i
+    for i, prop in enumerate(properties)
+    if prop.get("quality_category", "") == "standard"
+    and len(geometries[i]["coordinates"][0]) >= min_points
+]
 
     return (
         [properties[i] for i in index_sub],
